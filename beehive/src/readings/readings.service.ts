@@ -28,7 +28,7 @@ export class ReadingsService {
     }
 
     await this.readingRepository.save({
-      beehive_id: beehive.id,
+      beehive: { id: beehive.id },
       temperature: readings.temperature,
       pressure: readings.pressure,
       humidity: readings.humidity,

@@ -23,7 +23,7 @@ import { AuthModule } from './auth/auth.module';
         port: configService.get<number>('DB_PORT'),
         username: 'smart_bee_db_user',
         password: '8vHU2KZcdz32xu70fMtUq0UuQF5UFaEK',
-        database: 'smartsmart_bee_db',
+        database: 'smart_bee_db',
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: true,
       }),

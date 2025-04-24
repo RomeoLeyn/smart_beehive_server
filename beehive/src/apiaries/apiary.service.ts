@@ -1,0 +1,121 @@
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { CreateApiaryDto } from './dto/create-apiary.dto';
+import { UpdateApiaryDto } from './dto/update-apiary.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Apiary } from './entities/apiary.entity';
+import { Repository } from 'typeorm';
+import { User } from 'src/user/entities/user.entity';
+import { ApiariesResponseDto } from './dto/apiaries-response-dto';
+import { ApiaryDetailsResponseDto } from './dto/apiary-details-response-dto';
+
+@Injectable()
+export class ApiaryService {
+  constructor(
+    @InjectRepository(Apiary)
+    private readonly apiaryRepository: Repository<Apiary>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
+  async create(userId: number, createApiaryDto: CreateApiaryDto) {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const apiary = await this.apiaryRepository.save({
+      user: { id: user.id },
+      name: createApiaryDto.name,
+      region: createApiaryDto.region,
+      city: createApiaryDto.city,
+      beeBreeds: createApiaryDto.beeBreeds,
+      honeyType: createApiaryDto.honeyType,
+    });
+    return { apiary };
+  }
+
+  async findAll(userId: number): Promise<ApiariesResponseDto[]> {
+    const apiaries = await this.apiaryRepository.find({
+      where: { user: { id: userId } },
+      relations: {
+        user: true,
+        beehives: true,
+      },
+    });
+    return apiaries.map((apiary) => ({
+      id: apiary.id,
+      name: apiary.name,
+      region: apiary.region,
+      city: apiary.city,
+      user: {
+        id: apiary.user.id,
+        phoneNumber: apiary.user.phoneNumber,
+      },
+      beehiveCount: apiary.beehives.length,
+      beeBreeds: apiary.beeBreeds,
+      honeyType: apiary.honeyType,
+    }));
+  }
+
+  async findOne(userId: number, id: number): Promise<ApiaryDetailsResponseDto> {
+    const apiaryDetails = await this.apiaryRepository.findOne({
+      where: { id },
+      relations: {
+        beehives: {
+          readings: true,
+        },
+        user: true,
+      },
+    });
+
+    if (!apiaryDetails) {
+      throw new NotFoundException('Apiary not found');
+    }
+
+    return {
+      id: apiaryDetails?.id,
+      name: apiaryDetails?.name,
+      region: apiaryDetails?.region,
+      city: apiaryDetails?.city,
+      beeBreeds: apiaryDetails?.beeBreeds,
+      honeyType: apiaryDetails?.honeyType,
+      user: {
+        id: apiaryDetails?.user.id,
+        phoneNumber: apiaryDetails?.user.phoneNumber,
+      },
+      beehives: apiaryDetails?.beehives?.map((beehive) => ({
+        id: beehive.id,
+        name: beehive.name,
+        readings: beehive.readings,
+        beehive_key: beehive.beehive_key,
+      })),
+      createdAt: apiaryDetails?.createdAt.toISOString(),
+      updatedAt: apiaryDetails?.updatedAt.toISOString(),
+    };
+  }
+
+  async findById(id: number) {
+    const apiaryDetails = await this.apiaryRepository.findOne({
+      where: { id },
+      relations: {
+        user: true,
+      },
+    });
+    return { apiaryDetails };
+  }
+
+  async update(id: number, updateApiaryDto: UpdateApiaryDto) {
+    const isApiaryExists = await this.apiaryRepository.findOne({
+      where: { id },
+    });
+    if (!isApiaryExists) {
+      throw new NotFoundException('Apiary not found');
+    }
+
+    return this.apiaryRepository.update(id, updateApiaryDto);
+  }
+
+  remove(id: number) {
+    return `This action removes a #${id} apiary`;
+  }
+}

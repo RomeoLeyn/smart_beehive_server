@@ -1,12 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateApiaryDto } from './dto/create-apiary.dto';
-import { UpdateApiaryDto } from './dto/update-apiary.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Apiary } from './entities/apiary.entity';
-import { Repository } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
+import { Repository } from 'typeorm';
 import { ApiariesResponseDto } from './dto/apiaries-response-dto';
 import { ApiaryDetailsResponseDto } from './dto/apiary-details-response-dto';
+import { CreateApiaryDto } from './dto/create-apiary.dto';
+import { UpdateApiaryDto } from './dto/update-apiary.dto';
+import { Apiary } from './entities/apiary.entity';
 
 @Injectable()
 export class ApiaryService {
@@ -57,7 +57,7 @@ export class ApiaryService {
     }));
   }
 
-  async findOne(userId: number, id: number): Promise<ApiaryDetailsResponseDto> {
+  async findOne(id: number): Promise<ApiaryDetailsResponseDto> {
     const apiaryDetails = await this.apiaryRepository.findOne({
       where: { id },
       relations: {
@@ -69,7 +69,7 @@ export class ApiaryService {
     });
 
     if (!apiaryDetails) {
-      throw new NotFoundException('Apiary not found');
+      throw new Error('Apiary not found');
     }
 
     return {
@@ -101,6 +101,11 @@ export class ApiaryService {
         user: true,
       },
     });
+
+    if (!apiaryDetails) {
+      throw new NotFoundException('Not found');
+    }
+
     return { apiaryDetails };
   }
 

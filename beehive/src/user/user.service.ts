@@ -33,6 +33,7 @@ export class UserService {
     });
 
     const token = this.jwtService.sign({
+      id: user.id,
       phoneNumber: createUserDto.phoneNumber,
     });
 

@@ -8,11 +8,12 @@ import { ApiaryService } from 'src/apiaries/apiary.service';
 
 @Injectable()
 export class ResoureceAccessGuard implements CanActivate {
-  constructor(private readonly apiaryService: ApiaryService) {}
+  constructor(private readonly apiaryService: ApiaryService) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const { id, type } = request.params;
+    const { id, type } = request.params as { id: number; type: string };
+    const user = request.user;
 
     let entity;
 
@@ -26,8 +27,6 @@ export class ResoureceAccessGuard implements CanActivate {
       default:
         throw new NotFoundException('Not found');
     }
-
-    const user = request.user;
 
     if (entity && user && entity.apiaryDetails.user.id === user.id) {
       return true;

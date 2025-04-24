@@ -1,20 +1,20 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
-  UseGuards,
+  Get,
+  Param,
+  Patch,
+  Post,
   Request,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiaryService } from './apiary.service';
-import { CreateApiaryDto } from './dto/create-apiary.dto';
-import { UpdateApiaryDto } from './dto/update-apiary.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ResoureceAccessGuard } from 'src/guard/resource-access-guard';
+import { ApiaryService } from './apiary.service';
 import { ApiariesResponseDto } from './dto/apiaries-response-dto';
+import { CreateApiaryDto } from './dto/create-apiary.dto';
+import { UpdateApiaryDto } from './dto/update-apiary.dto';
 
 @Controller('apiaries')
 export class ApiaryController {
@@ -29,13 +29,14 @@ export class ApiaryController {
   @Get()
   @UseGuards(JwtAuthGuard)
   findAll(@Request() req): Promise<ApiariesResponseDto[]> {
-    return this.apiaryService.findAll(Number(req.user.user.id));
+    console.log(req.user.id);
+    return this.apiaryService.findAll(Number(req.user.id));
   }
 
   @Get(':type/:id')
   @UseGuards(JwtAuthGuard, ResoureceAccessGuard)
-  findOne(@Request() req, @Param('id') id: string) {
-    return this.apiaryService.findOne(Number(req.user.id), +id);
+  findOne(@Param('id') id: string) {
+    return this.apiaryService.findOne(+id);
   }
 
   @Patch(':id')

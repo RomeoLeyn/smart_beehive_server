@@ -1,4 +1,5 @@
 export class ReadingsResponseDto {
+  id: number;
   temperature: number;
   pressure: number;
   humidity: number;
@@ -8,4 +9,6 @@ export class ReadingsResponseDto {
   rain_precentage: number;
   longitude: string;
   latitude: string;
+  createdAt: Date;
+  updatedAt: Date;
 }

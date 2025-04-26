@@ -1,10 +1,12 @@
 import { Beehive } from 'src/beehive/entities/beehive.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('readings')
@@ -41,4 +43,10 @@ export class Reading {
 
   @Column({ nullable: false, type: 'varchar', length: 255 })
   latitude: string;
+
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  updatedAt: Date;
 }

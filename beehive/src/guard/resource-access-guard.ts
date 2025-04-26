@@ -8,7 +8,7 @@ import { ApiaryService } from 'src/apiaries/apiary.service';
 
 @Injectable()
 export class ResoureceAccessGuard implements CanActivate {
-  constructor(private readonly apiaryService: ApiaryService) { }
+  constructor(private readonly apiaryService: ApiaryService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();

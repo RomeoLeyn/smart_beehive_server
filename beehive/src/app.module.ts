@@ -19,7 +19,7 @@ import { AuthModule } from './auth/auth.module';
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
         host: 'dpg-d0530t15pdvs73ajhov0-a',
-        port: configService.get<number>('DB_PORT'),
+        port: 5432,
         username: 'smart_bee_db_user',
         password: '8vHU2KZcdz32xu70fMtUq0UuQF5UFaEK',
         database: 'smart_bee_db',

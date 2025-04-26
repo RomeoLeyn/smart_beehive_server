@@ -10,9 +10,9 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { UserService } from './user.service';
 import { CreateResponseUserDto } from './dto/create-user-response.dto';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
@@ -30,6 +30,11 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   findAll() {
     return this.userService.findAll();
+  }
+
+  @Get('/ping')
+  healthCheck() {
+    return 'pong';
   }
 
   @Delete(':id')

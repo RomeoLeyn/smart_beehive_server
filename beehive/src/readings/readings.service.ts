@@ -53,9 +53,6 @@ export class ReadingsService {
       where: { beehive: { id: beehive.id } },
     });
 
-    console.log(typeof beehive);
-    console.log(typeof readingsHistory);
-
     return {
       beehive: {
         id: beehive.id,

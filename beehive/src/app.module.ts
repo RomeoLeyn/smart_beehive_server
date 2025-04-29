@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
+import { UserModule } from './modules/users/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ApiaryModule } from './apiaries/apiary.module';
-import { BeehiveModule } from './beehive/beehive.module';
-import { MqttModule } from './mqtt/mqtt.module';
-import { ReadingsModule } from './readings/readings.module';
-import { AuthModule } from './auth/auth.module';
+import { ApiaryModule } from './modules/apiaries/apiary.module';
+import { BeehiveModule } from './modules/beehives/beehive.module';
+import { MqttModule } from './modules/mqtt/mqtt.module';
+import { ReadingsModule } from './modules/readings/readings.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [

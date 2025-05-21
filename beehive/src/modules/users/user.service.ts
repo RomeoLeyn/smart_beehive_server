@@ -18,12 +18,6 @@ export class UserService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<AuthResponseUserDto> {
-    const existingUser = await this.findOne(createUserDto.phoneNumber);
-
-    if (existingUser) {
-      throw new Error('User already exists');
-    }
-
     const user = await this.userRepository.save({
       phoneNumber: createUserDto.phoneNumber,
       password: bcrypt.hashSync(createUserDto.password, SALT_ROUNDS),
@@ -43,7 +37,7 @@ export class UserService {
     };
   }
 
-  async findOne(phoneNumber: string) {
+  async findByPhoneNumber(phoneNumber: string) {
     return await this.userRepository.findOne({
       where: {
         phoneNumber: phoneNumber,

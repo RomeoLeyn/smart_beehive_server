@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { IUser } from 'src/common/types/types';
@@ -15,7 +15,8 @@ export class AuthService {
   ) {}
 
   async validateUser(phoneNumber: string, password: string) {
-    const user: User | null = await this.userService.findOne(phoneNumber);
+    const user: User | null =
+      await this.userService.findByPhoneNumber(phoneNumber);
 
     if (!user) {
       return null;
@@ -30,6 +31,14 @@ export class AuthService {
   }
 
   async create(user: CreateUserDto): Promise<AuthResponseUserDto> {
+    const existingUser = await this.userService.findByPhoneNumber(
+      user.phoneNumber,
+    );
+
+    if (existingUser) {
+      throw new ConflictException('User already exists');
+    }
+
     return await this.userService.create(user);
   }
 

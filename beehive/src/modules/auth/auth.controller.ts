@@ -21,7 +21,7 @@ export class AuthController {
   ) {}
 
   @Post()
-  @UsePipes(new ValidationPipe())
+  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   async create(
     @Body() createUserDto: CreateUserDto,
   ): Promise<AuthResponseUserDto> {

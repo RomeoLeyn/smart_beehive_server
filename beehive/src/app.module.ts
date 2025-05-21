@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './modules/users/user.module';
@@ -9,6 +9,7 @@ import { BeehiveModule } from './modules/beehives/beehive.module';
 import { MqttModule } from './modules/mqtt/mqtt.module';
 import { ReadingsModule } from './modules/readings/readings.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { RequestLoggerMiddleware } from './common/middlewares/request-logger.middleware';
 
 @Module({
   imports: [
@@ -18,11 +19,11 @@ import { AuthModule } from './modules/auth/auth.module';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: 'dpg-d0530t15pdvs73ajhov0-a',
-        port: 5432,
-        username: 'smart_bee_db_user',
-        password: '8vHU2KZcdz32xu70fMtUq0UuQF5UFaEK',
-        database: 'smart_bee_db',
+        host: configService.get<string>('DB_HOST'),
+        port: configService.get<number>('DB_PORT'),
+        username: 'postgres',
+        password: '12345678',
+        database: 'smart-beehive-ts-db',
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: true,
       }),
@@ -37,4 +38,8 @@ import { AuthModule } from './modules/auth/auth.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(RequestLoggerMiddleware).forRoutes('*');
+  }
+}

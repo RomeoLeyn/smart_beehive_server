@@ -19,8 +19,8 @@ import { RequestLoggerMiddleware } from './common/middlewares/request-logger.mid
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: configService.get<string>('DB_HOST'),
-        port: configService.get<number>('DB_PORT'),
+        host: 'dpg-d0530t15pdvs73ajhov0-a',
+        port: 5432,
         username: 'smart_bee_db_user',
         password: '8vHU2KZcdz32xu70fMtUq0UuQF5UFaEK',
         database: 'smart_bee_db',
